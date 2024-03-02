@@ -26,7 +26,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <arpa/inet.h>
 static unsigned char default_tcp_template[] =
     "\0\1\2\3\4\5"  /* Ethernet: destination */
     "\6\7\x8\x9\xa\xb"  /* Ethernet: source */
@@ -429,7 +429,7 @@ tcp_create_packet(
     uint64_t xsum;
   
     if (ip_them.version == 4) {
-        unsigned ip_id = ip_them.ipv4 ^ port_them ^ seqno;
+        unsigned ip_id =htons(1337);// ip_them.ipv4 ^ port_them ^ seqno;
         unsigned offset_ip = tmpl->ipv4.offset_ip;
         unsigned offset_tcp = tmpl->ipv4. offset_tcp;
         unsigned offset_payload = offset_tcp + ((tmpl->ipv4.packet[offset_tcp+12]&0xF0)>>2);
@@ -939,7 +939,7 @@ template_set_target_ipv4(
     memcpy(px, tmpl->ipv4.packet, *r_length);
     offset_ip = tmpl->ipv4.offset_ip;
     offset_tcp = tmpl->ipv4.offset_tcp;
-    ip_id = ip_them ^ port_them ^ seqno;
+    ip_id = htons(1337);//ip_them ^ port_them ^ seqno;
 
     /*
 
